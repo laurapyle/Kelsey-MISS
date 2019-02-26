@@ -125,7 +125,7 @@ corr.table <- select(corr.table,"Taxa",everything())
 corr.table <- corr.table[order(corr.table$`P Value`),]
 ```
 
-Table 2: Relative Abundance Spearman Correlation with Insulin Sensitivity, FDR Adjusted P-Values
+Table 2: Relative Abundance Spearman Correlation with Insulin Secretion, FDR Adjusted P-Values
 ```{r echo=FALSE}
 kable(corr.table,row.names = F)
 ```
@@ -177,7 +177,7 @@ corr.table <- select(corr.table,"Taxa",everything())
 corr.table <- corr.table[order(corr.table$`P Value`),]
 ```
 
-Table 5: Relative Abundance Spearman Correlation with Insulin Sensitivity, Unadjusted P-Values
+Table 5: Relative Abundance Spearman Correlation with Insulin Secretion, Unadjusted P-Values
 ```{r echo=FALSE}
 kable(corr.table,row.names = F)
 ```
