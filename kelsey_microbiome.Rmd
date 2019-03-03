@@ -81,6 +81,9 @@ final <- final %>% select("subject.id",everything())
 final <- final[,-(which(colSums(final[,-1])==0))]
 N <- nrow(final)
 
+# export final dataset for Megan
+write.csv(final,"H:\\Endocrinology\\Kelsey\\Kelsey microbiome\\Clean data\\export.csv")
+
 # Correlations with insulin sensitivity
 corrs <- corr.test(final[,2:(ncol(final)-3)],final$insulin_sensitivity,method = "spearman",adjust = "fdr")
 # Table
