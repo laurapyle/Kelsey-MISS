@@ -93,6 +93,32 @@ colnames(corr.table) <- c("R","n","P Value")
 corr.table$Taxa <- rownames(corr.table)
 corr.table <- select(corr.table,"Taxa",everything())
 corr.table <- corr.table[order(corr.table$`P Value`),]
+
+# read in the phylum level data
+phylum <- read.csv('H:/Endocrinology/Kelsey/Kelsey microbiome/Raw data/MISS_Phylum_OTU_12_18_18.csv',row.names = 1)
+phylum <- phylum[,-1]
+# Make OTU table.
+phylummat <- phylum
+phylummat <- as.matrix(phylummat)
+PHY <- otu_table(phylummat,taxa_are_rows = T)
+# Transpose.
+phylummat <- as.data.frame(t(phylummat))
+phylummat$subject.id <- rownames(phylummat)
+phylummat$fb <- phylummat$`Bacteria/Firmicutes` / phylummat$`Bacteria/Bacteroidetes`
+sammat$subject.id <- sammat$miss_id
+phylummat <- merge(phylummat,sammat,by="subject.id",all.x = TRUE,all.y = FALSE)
+# remove people who are missing all SI variables
+phylummat <- phylummat[!is.na(phylummat$disposition_index) | !is.na(phylummat$insulin_secretion_mm) | !is.na(phylummat$insulin_sensitivity),]
+# Move columns
+phylummat <- phylummat %>% select("subject.id",everything())
+
+# Correlations with insulin sensitivity
+corrs_phy <- corr.test(phylummat[c("insulin_sensitivity","insulin_secretion_mm","disposition_index")],phylummat$fb,method = "spearman",adjust = "none")
+corr.table.phy <- as.data.frame(cbind(corrs_phy$r,corrs_phy$n,corrs_phy$p))
+corr.table.phy <- round(corr.table.phy,3)
+colnames(corr.table.phy) <- c("R","n","P Value")
+corr.table.phy$Variable <- rownames(corr.table.phy)
+
 ```
 
 # Background
@@ -202,3 +228,7 @@ Table 6: Relative Abundance Spearman Correlation with Disposition Index, Unadjus
 kable(corr.table,row.names = F)
 ```
 
+Table 7: Correlation of Insulin Sensitivity, Insulin Secretion, and DI with F:B ratio, Unadjusted P-Values
+```{r echo=FALSE}
+kable(corr.table.phy,row.names = F)
+```
